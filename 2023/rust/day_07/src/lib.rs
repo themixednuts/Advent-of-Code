@@ -50,13 +50,13 @@ impl<'a> Hand<'a> {
         let mut char_count = HashMap::new();
 
         self.0.chars().for_each(|c| {
-            char_count.entry(c).and_modify(|e| *e += 1).or_insert(0);
+            char_count.entry(c).and_modify(|e| *e += 1).or_insert(1);
         });
 
         let mut sorted = char_count.into_values().collect::<Vec<_>>();
+
         sorted.sort_unstable();
         sorted.reverse();
-
         match (sorted.get(0), sorted.get(1)) {
             (Some(&5), _) => HandType::FiveKind,
             (Some(&4), _) => HandType::FourKind,
