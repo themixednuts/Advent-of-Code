@@ -8,7 +8,7 @@ members = [
   "day_05",
   "day_06",
   "day_07",
-  # "day_08",
+  "day_08",
   # "day_09",
   # "day_10",
   # "day_11",
@@ -36,4 +36,5 @@ members = [
 
 
 [workspace.dependencies]
-criterion = "^0.5.1"
+criterion = "*"
+num = "*"
