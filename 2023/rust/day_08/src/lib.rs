@@ -52,24 +52,69 @@ pub fn solution1(input: &str) -> usize {
 pub fn solution2(input: &str) -> usize {
     let mut rotation: Vec<char> = vec![];
     let mut next_idx = 0;
+    // let mut search_keys: Vec<&str> = vec![];
+    // let mut arr: Vec<usize> = vec![];
     let mut map: HashMap<String, (String, String)> = HashMap::new();
+    // let mut new_map: HashMap<&str, (String, usize)> = HashMap::new();
 
-    input.lines().enumerate().for_each(|(idx, l)| {
-        if idx == 0 {
-            rotation = l.chars().collect::<Vec<_>>();
-            return;
-        }
-        if idx == 1 {
-            return;
-        }
+    input
+        .lines()
+        .enumerate()
+        // .skip_while(|(_, l)| l.is_empty())
+        .for_each(|(idx, l)| {
+            if idx == 0 {
+                rotation = l.chars().collect::<Vec<_>>();
+                return;
+            }
 
-        let (set, dir) = l.split_once(" = ").unwrap();
-        let (left, right) = dir.split_once(",").unwrap();
+            if idx == 1 {
+                return;
+            }
 
-        let left = left.replace("(", "").replace(" ", "");
-        let right = right.replace(")", "").replace(" ", "");
-        map.insert(set.to_owned(), (left.to_owned(), right.to_owned()));
-    });
+            if idx > 1 {
+                if rotation.get(next_idx + 1).is_some() {
+                    next_idx += 1;
+                } else {
+                    next_idx = 0;
+                }
+            }
+
+            let (set, dir) = l.split_once(" = ").unwrap();
+            let (left, right) = dir.split_once(",").unwrap();
+
+            let left = left.replace("(", "").replace(" ", "");
+            let right = right.replace(")", "").replace(" ", "");
+
+            // let search_key: String;
+            // match rotation[next_idx] {
+            //     'L' => {
+            //         search_key = left.to_owned();
+            //     }
+            //     'R' => {
+            //         search_key = right.to_owned();
+            //     }
+            //     _ => unreachable!(),
+            // }
+
+            // if set.ends_with('A') {
+            //     match new_map.get_mut(set) {
+            //         Some((search, count)) if !search.ends_with('Z') => {
+            //             *count += 1;
+            //             *search = search_key;
+            //         }
+            //         _ => {
+            //             new_map.insert(set, (search_key, 1));
+            //         }
+            //     }
+            // }
+
+            map.insert(set.to_owned(), (left.to_owned(), right.to_owned()));
+        });
+
+    // dbg!(&new_map);
+    // return new_map
+    //     .into_values()
+    //     .fold(1, |acc, (_, count)| num::integer::lcm(acc, count));
 
     let mut search_keys: Vec<String> = map
         .clone()
@@ -86,6 +131,7 @@ pub fn solution2(input: &str) -> usize {
 
     loop {
         if search_keys.iter().all(|s| s.ends_with('Z')) {
+            dbg!(&cycles);
             return cycles.into_iter().fold(1, num::integer::lcm);
         }
         for i in 0..search_keys.len() {
