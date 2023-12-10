@@ -7,7 +7,7 @@ pub fn solution1(input: &str) -> isize {
                 .filter_map(|s| s.parse::<isize>().ok())
                 .collect::<Vec<_>>();
 
-            differences_push(&mut vec).last().unwrap().to_owned()
+            differences(&mut vec).last().unwrap().to_owned()
         })
         .sum()
 }
@@ -21,29 +21,20 @@ pub fn solution2(input: &str) -> isize {
                 .filter_map(|s| s.parse::<isize>().ok())
                 .collect::<Vec<_>>();
 
-            differences_prepend(&mut vec).first().unwrap().to_owned()
+            vec.reverse();
+            differences(&mut vec).last().unwrap().to_owned()
         })
         .sum()
 }
 
-fn differences_push(v: &mut Vec<isize>) -> &mut Vec<isize> {
+fn differences(v: &mut Vec<isize>) -> &mut Vec<isize> {
     if v.iter().all(|&x| x == 0) {
         return v;
     }
 
     let mut diffs: Vec<isize> = v.windows(2).map(|w| w[1] - w[0]).collect();
-    let result = differences_push(&mut diffs);
+    let result = differences(&mut diffs);
     v.push(result.last().unwrap() + v.last().unwrap());
-    v
-}
-fn differences_prepend(v: &mut Vec<isize>) -> &mut Vec<isize> {
-    if v.iter().all(|&x| x == 0) {
-        return v;
-    }
-
-    let mut diffs: Vec<isize> = v.windows(2).map(|w| w[1] - w[0]).collect();
-    let result = differences_prepend(&mut diffs);
-    v.insert(0, v.first().unwrap() - result.first().unwrap());
     v
 }
 
